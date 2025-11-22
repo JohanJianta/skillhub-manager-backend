@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import { IsNotEmpty, IsEmail, IsString } from 'class-validator';
+import { IsNotEmpty, IsEmail, IsString, IsPhoneNumber } from 'class-validator';
 
 export class CreateStudentDto {
   @IsString()
@@ -9,7 +9,7 @@ export class CreateStudentDto {
   @IsEmail()
   email: string;
 
-  @IsString()
+  @IsPhoneNumber('ID')
   @IsNotEmpty()
   phone: string;
 }

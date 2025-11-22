@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Exclude } from 'class-transformer';
-import { Enrollment } from '../enrollment/enrollment.entity';
+import { Course } from '../course/course.entity';
 
-@Entity({ name: 'students' })
-export class Student {
+@Entity({ name: 'instructors' })
+export class Instructor {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -18,10 +18,6 @@ export class Student {
   phone: string;
 
   @Exclude()
-  @Column({ default: false })
-  is_deleted: boolean;
-
-  @Exclude()
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
@@ -33,6 +29,6 @@ export class Student {
   })
   updated_at: Date;
 
-  @OneToMany(() => Enrollment, (enrollment) => enrollment.student)
-  enrollments: Enrollment[];
+  @OneToMany(() => Course, (course) => course.instructor)
+  courses: Course[];
 }

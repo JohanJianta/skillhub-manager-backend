@@ -16,7 +16,6 @@ export class StudentService {
     private repo: Repository<Student>,
   ) {}
 
-  // Find all (exclude deleted)
   async findAll() {
     return this.repo.find({
       where: { is_deleted: false },
@@ -24,7 +23,6 @@ export class StudentService {
     });
   }
 
-  // Find one (exclude deleted)
   async findOne(id: number) {
     const student = await this.repo.findOne({
       where: { id, is_deleted: false },
@@ -37,7 +35,6 @@ export class StudentService {
     return student;
   }
 
-  // Create student
   async create(dto: CreateStudentDto) {
     // Check duplicate email
     const existing = await this.repo.findOne({
@@ -54,7 +51,6 @@ export class StudentService {
     return this.repo.save(student);
   }
 
-  // Update student
   async update(id: number, dto: UpdateStudentDto) {
     const student = await this.repo.findOne({
       where: { id, is_deleted: false },
@@ -64,7 +60,6 @@ export class StudentService {
       throw new NotFoundException(`Student with id ${id} not found`);
     }
 
-    // Check if new email is already used
     if (dto.email && dto.email !== student.email) {
       const emailExists = await this.repo.findOne({
         where: { email: dto.email, is_deleted: false },
@@ -81,7 +76,6 @@ export class StudentService {
     return this.repo.save(student);
   }
 
-  // Soft delete
   async delete(id: number) {
     const student = await this.repo.findOne({
       where: { id, is_deleted: false },
