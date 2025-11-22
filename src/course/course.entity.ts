@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -19,10 +18,11 @@ export class Course {
   @Column({ nullable: false })
   name: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', nullable: false })
   description: string;
 
   // FK column
+  @Exclude()
   @Column({ type: 'int', nullable: false })
   instructor_id: number;
 

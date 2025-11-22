@@ -33,12 +33,21 @@ export class Enrollment {
   @JoinColumn({ name: 'course_id' })
   course: Course;
 
-  @Column({ nullable: true })
+  @Column({ nullable: false, default: 'enrolled' })
   status: string;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  enrolled_at: Date;
+  @Column({
+    type: 'timestamp',
+    nullable: false,
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  created_at: Date;
 
-  @Column({ type: 'timestamp', nullable: true })
-  cancelled_at: Date | null;
+  @Column({
+    type: 'timestamp',
+    nullable: false,
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
+  updated_at: Date;
 }

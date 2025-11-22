@@ -1,11 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-import {
-  IsInt,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  IsDateString,
-} from 'class-validator';
+import { IsInt, IsNotEmpty, IsString, IsDateString } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateCourseDto {
@@ -13,9 +6,9 @@ export class CreateCourseDto {
   @IsNotEmpty()
   name: string;
 
-  @IsOptional()
   @IsString()
-  description?: string;
+  @IsNotEmpty()
+  description: string;
 
   @IsInt()
   @Type(() => Number)

@@ -20,14 +20,13 @@ export class CourseService {
     return this.repo.find({
       where: { is_deleted: false },
       order: { id: 'ASC' },
-      relations: ['instructor'],
     });
   }
 
   async findOne(id: number) {
     const course = await this.repo.findOne({
       where: { id, is_deleted: false },
-      relations: ['instructor'],
+      relations: ['instructor', 'enrollments'],
     });
 
     if (!course) {

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { Enrollment } from '../enrollment/enrollment.entity';
@@ -18,16 +17,21 @@ export class Student {
   phone: string;
 
   @Exclude()
-  @Column({ default: false })
+  @Column({ nullable: false, default: false })
   is_deleted: boolean;
 
   @Exclude()
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({
+    type: 'timestamp',
+    nullable: false,
+    default: () => 'CURRENT_TIMESTAMP',
+  })
   created_at: Date;
 
   @Exclude()
   @Column({
     type: 'timestamp',
+    nullable: false,
     default: () => 'CURRENT_TIMESTAMP',
     onUpdate: 'CURRENT_TIMESTAMP',
   })

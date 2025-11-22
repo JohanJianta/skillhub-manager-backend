@@ -11,10 +11,14 @@ import {
 import { CourseService } from './course.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
+import { InstructorService } from '../instructor/instructor.service';
 
 @Controller('/api/courses')
 export class CourseController {
-  constructor(private readonly courseService: CourseService) {}
+  constructor(
+    private readonly courseService: CourseService,
+    private readonly instructorService: InstructorService,
+  ) {}
 
   @Get()
   fetchAllCourses() {
@@ -27,12 +31,16 @@ export class CourseController {
   }
 
   @Post()
-  addCourse(@Body() dto: CreateCourseDto) {
+  async addCourse(@Body() dto: CreateCourseDto) {
+    await this.instructorService.findOne(dto.instructor_id);
     return this.courseService.create(dto);
   }
 
   @Put('/:id')
-  updateCourse(@Param('id') id: number, @Body() dto: UpdateCourseDto) {
+  async updateCourse(@Param('id') id: number, @Body() dto: UpdateCourseDto) {
+    if (dto.instructor_id) {
+      await this.instructorService.findOne(dto.instructor_id);
+    }
     return this.courseService.update(id, dto);
   }
 

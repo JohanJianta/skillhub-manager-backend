@@ -2,36 +2,35 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
   HttpCode,
   Param,
   Post,
 } from '@nestjs/common';
 import { EnrollmentService } from './enrollment.service';
 import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
+import { CourseService } from '../course/course.service';
+import { StudentService } from '../student/student.service';
 
 @Controller('/api/enrollments')
 export class EnrollmentController {
-  constructor(private readonly enrollmentService: EnrollmentService) {}
+  constructor(
+    private readonly enrollmentService: EnrollmentService,
+    private readonly studentService: StudentService,
+    private readonly courseService: CourseService,
+  ) {}
 
   @Post()
-  enrollStudent(@Body() dto: CreateEnrollmentDto) {
-    return this.enrollmentService.create(dto);
-  }
-
-  @Get('/student/:studentId')
-  fetchByStudent(@Param('studentId') studentId: number) {
-    return this.enrollmentService.findByStudent(studentId);
-  }
-
-  @Get('/course/:courseId')
-  fetchByCourse(@Param('courseId') courseId: number) {
-    return this.enrollmentService.findByCourse(courseId);
+  async enrollStudent(@Body() dto: CreateEnrollmentDto) {
+    await this.studentService.findOne(dto.student_id);
+    for (const courseId of dto.course_ids) {
+      await this.courseService.findOne(courseId);
+    }
+    return this.enrollmentService.createMany(dto);
   }
 
   @Delete('/:id')
   @HttpCode(204)
-  cancelEnrollment(@Param('id') id: number) {
+  removeEnrollment(@Param('id') id: number) {
     return this.enrollmentService.delete(id);
   }
 }

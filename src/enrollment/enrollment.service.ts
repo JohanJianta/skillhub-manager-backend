@@ -15,7 +15,7 @@ export class EnrollmentService {
     private repo: Repository<Enrollment>,
   ) {}
 
-  async create(dto: CreateEnrollmentDto) {
+  async createMany(dto: CreateEnrollmentDto) {
     const { student_id, course_ids } = dto;
 
     const created: Enrollment[] = [];
@@ -48,22 +48,6 @@ export class EnrollmentService {
     return created;
   }
 
-  async findByStudent(studentId: number) {
-    return this.repo.find({
-      where: { student_id: studentId },
-      relations: ['course'],
-      order: { enrolled_at: 'ASC' },
-    });
-  }
-
-  async findByCourse(courseId: number) {
-    return this.repo.find({
-      where: { course_id: courseId },
-      relations: ['student'],
-      order: { enrolled_at: 'ASC' },
-    });
-  }
-
   async delete(id: number): Promise<void> {
     const enrollment = await this.repo.findOne({
       where: { id },
@@ -74,8 +58,6 @@ export class EnrollmentService {
     }
 
     enrollment.status = 'cancelled';
-    enrollment.cancelled_at = new Date();
-
     await this.repo.save(enrollment);
     return;
   }

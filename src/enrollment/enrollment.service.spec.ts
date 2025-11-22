@@ -14,7 +14,6 @@ describe('EnrollmentService', () => {
 
   beforeEach(async () => {
     const mockRepo: MockRepo<Enrollment> = {
-      find: jest.fn(),
       findOne: jest.fn(),
       create: jest.fn(),
       save: jest.fn(),
@@ -44,9 +43,9 @@ describe('EnrollmentService', () => {
   });
 
   // =========================
-  // create()
+  // createMany()
   // =========================
-  it('create should create enrollments for one student into multiple courses', async () => {
+  it('createMany should create enrollments for one student into multiple courses', async () => {
     const dto: CreateEnrollmentDto = {
       student_id: 1,
       course_ids: [10, 20],
@@ -77,7 +76,7 @@ describe('EnrollmentService', () => {
     // save() is called twice
     repo.save!.mockResolvedValueOnce(created1).mockResolvedValueOnce(created2);
 
-    const result = await service.create(dto);
+    const result = await service.createMany(dto);
 
     expect(repo.findOne).toHaveBeenNthCalledWith(1, {
       where: { student_id: 1, course_id: 10 },
@@ -103,7 +102,7 @@ describe('EnrollmentService', () => {
     expect(result).toEqual([created1, created2]);
   });
 
-  it('create should throw ConflictException if student is already enrolled in a course', async () => {
+  it('createMany should throw ConflictException if student is already enrolled in a course', async () => {
     const dto: CreateEnrollmentDto = {
       student_id: 1,
       course_ids: [10, 20],
@@ -119,68 +118,12 @@ describe('EnrollmentService', () => {
     // First course_id already has enrollment
     repo.findOne!.mockResolvedValueOnce(existing);
 
-    await expect(service.create(dto)).rejects.toBeInstanceOf(ConflictException);
+    await expect(service.createMany(dto)).rejects.toBeInstanceOf(
+      ConflictException,
+    );
 
     expect(repo.create).not.toHaveBeenCalled();
     expect(repo.save).not.toHaveBeenCalled();
-  });
-
-  // =========================
-  // findByStudent()
-  // =========================
-  it('findByStudent should return enrollments for a student', async () => {
-    const enrollments = [
-      {
-        id: 1,
-        student_id: 1,
-        course_id: 10,
-      } as Enrollment,
-      {
-        id: 2,
-        student_id: 1,
-        course_id: 20,
-      } as Enrollment,
-    ];
-
-    repo.find!.mockResolvedValue(enrollments);
-
-    const result = await service.findByStudent(1);
-
-    expect(repo.find).toHaveBeenCalledWith({
-      where: { student_id: 1 },
-      relations: ['course'],
-      order: { enrolled_at: 'ASC' },
-    });
-    expect(result).toEqual(enrollments);
-  });
-
-  // =========================
-  // findByCourse()
-  // =========================
-  it('findByCourse should return enrollments for a course', async () => {
-    const enrollments = [
-      {
-        id: 1,
-        student_id: 1,
-        course_id: 10,
-      } as Enrollment,
-      {
-        id: 2,
-        student_id: 2,
-        course_id: 10,
-      } as Enrollment,
-    ];
-
-    repo.find!.mockResolvedValue(enrollments);
-
-    const result = await service.findByCourse(10);
-
-    expect(repo.find).toHaveBeenCalledWith({
-      where: { course_id: 10 },
-      relations: ['student'],
-      order: { enrolled_at: 'ASC' },
-    });
-    expect(result).toEqual(enrollments);
   });
 
   // =========================
@@ -191,15 +134,15 @@ describe('EnrollmentService', () => {
       id: 1,
       student_id: 1,
       course_id: 10,
-      status: 'active',
-      cancelled_at: null,
-    } as Enrollment;
+      status: 'enrolled',
+      updated_at: null,
+    } as unknown as Enrollment;
 
     repo.findOne!.mockResolvedValueOnce(existing);
     repo.save!.mockResolvedValueOnce({
       ...existing,
       status: 'cancelled',
-      cancelled_at: new Date(),
+      updated_at: new Date(),
     } as Enrollment);
 
     const result = await service.delete(1);
@@ -213,7 +156,7 @@ describe('EnrollmentService', () => {
       expect.objectContaining({
         id: 1,
         status: 'cancelled',
-        cancelled_at: expect.any(Object) as Date,
+        updated_at: expect.any(Object) as Date,
       }),
     );
 

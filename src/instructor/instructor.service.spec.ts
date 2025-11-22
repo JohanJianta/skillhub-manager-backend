@@ -60,7 +60,6 @@ describe('InstructorService', () => {
 
     expect(repo.find).toHaveBeenCalledWith({
       order: { id: 'ASC' },
-      relations: ['courses'],
     });
     expect(result).toEqual(instructors);
   });

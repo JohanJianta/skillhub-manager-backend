@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-import { IsOptional, IsEmail, IsString } from 'class-validator';
+import { IsOptional, IsEmail, IsString, IsPhoneNumber } from 'class-validator';
 
 export class UpdateStudentDto {
   @IsOptional()
@@ -11,6 +10,6 @@ export class UpdateStudentDto {
   email?: string;
 
   @IsOptional()
-  @IsString()
+  @IsPhoneNumber('ID')
   phone?: string;
 }

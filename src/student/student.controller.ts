@@ -27,12 +27,12 @@ export class StudentController {
   }
 
   @Post()
-  create(@Body() dto: CreateStudentDto) {
+  addStudent(@Body() dto: CreateStudentDto) {
     return this.studentService.create(dto);
   }
 
   @Put('/:id')
-  update(@Param('id') id: number, @Body() dto: UpdateStudentDto) {
+  updateStudent(@Param('id') id: number, @Body() dto: UpdateStudentDto) {
     return this.studentService.update(id, dto);
   }
 

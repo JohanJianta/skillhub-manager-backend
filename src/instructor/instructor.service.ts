@@ -19,7 +19,6 @@ export class InstructorService {
   async findAll() {
     return this.repo.find({
       order: { id: 'ASC' },
-      relations: ['courses'],
     });
   }
 

@@ -60,7 +60,6 @@ describe('CourseService', () => {
     expect(repo.find).toHaveBeenCalledWith({
       where: { is_deleted: false },
       order: { id: 'ASC' },
-      relations: ['instructor'],
     });
     expect(result).toEqual(courses);
   });
@@ -81,7 +80,7 @@ describe('CourseService', () => {
 
     expect(repo.findOne).toHaveBeenCalledWith({
       where: { id: 1, is_deleted: false },
-      relations: ['instructor'],
+      relations: ['instructor', 'enrollments'],
     });
     expect(result).toEqual(course);
   });

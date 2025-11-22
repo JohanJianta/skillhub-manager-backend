@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { IsArray, IsInt, ArrayMinSize } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 

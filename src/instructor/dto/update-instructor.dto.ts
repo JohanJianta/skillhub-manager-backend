@@ -10,6 +10,6 @@ export class UpdateInstructorDto {
   email?: string;
 
   @IsOptional()
-  @IsPhoneNumber()
+  @IsPhoneNumber('ID')
   phone?: string;
 }

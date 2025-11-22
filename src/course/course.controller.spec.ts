@@ -4,6 +4,7 @@ import { CourseController } from './course.controller';
 import { CourseService } from './course.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
+import { InstructorService } from '../instructor/instructor.service';
 
 describe('CourseController', () => {
   let controller: CourseController;
@@ -17,6 +18,10 @@ describe('CourseController', () => {
     delete: jest.fn(),
   };
 
+  const mockInstructorService = {
+    findOne: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CourseController],
@@ -24,6 +29,10 @@ describe('CourseController', () => {
         {
           provide: CourseService,
           useValue: mockCourseService,
+        },
+        {
+          provide: InstructorService,
+          useValue: mockInstructorService,
         },
       ],
     }).compile();
@@ -78,7 +87,7 @@ describe('CourseController', () => {
   // ==============================
   // POST /api/courses
   // ==============================
-  it('create should create and return a course', async () => {
+  it('addCourse should create and return a course', async () => {
     const dto: CreateCourseDto = {
       name: 'Course A',
       description: 'Desc',
@@ -99,7 +108,7 @@ describe('CourseController', () => {
   // ==============================
   // PUT /api/courses/:id
   // ==============================
-  it('update should update and return a course', async () => {
+  it('updateCourse should update and return a course', async () => {
     const dto: UpdateCourseDto = {
       name: 'Updated Course',
       description: 'Updated Desc',

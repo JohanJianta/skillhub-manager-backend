@@ -79,7 +79,7 @@ describe('StudentController', () => {
   // ==============================
   // POST /api/students
   // ==============================
-  it('create should create and return a student', async () => {
+  it('addStudent should create and return a student', async () => {
     const dto: CreateStudentDto = {
       name: 'John',
       email: 'john@test.com',
@@ -90,7 +90,7 @@ describe('StudentController', () => {
 
     mockStudentService.create.mockResolvedValue(created);
 
-    const response = await controller.create(dto);
+    const response = await controller.addStudent(dto);
 
     expect(service.create).toHaveBeenCalledWith(dto);
     expect(response).toEqual(created);
@@ -99,7 +99,7 @@ describe('StudentController', () => {
   // ==============================
   // PUT /api/students/:id
   // ==============================
-  it('update should update and return a student', async () => {
+  it('updateStudent should update and return a student', async () => {
     const dto: UpdateStudentDto = {
       name: 'Updated Name',
       email: 'updated@test.com',
@@ -110,7 +110,7 @@ describe('StudentController', () => {
 
     mockStudentService.update.mockResolvedValue(updated);
 
-    const response = await controller.update(1, dto);
+    const response = await controller.updateStudent(1, dto);
 
     expect(service.update).toHaveBeenCalledWith(1, dto);
     expect(response).toEqual(updated);

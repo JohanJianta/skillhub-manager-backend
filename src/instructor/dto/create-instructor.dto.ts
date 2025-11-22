@@ -9,7 +9,7 @@ export class CreateInstructorDto {
   @IsNotEmpty()
   email: string;
 
-  @IsPhoneNumber()
+  @IsPhoneNumber('ID')
   @IsNotEmpty()
   phone: string;
 }
