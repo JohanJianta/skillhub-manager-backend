@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Instructor {
+  id         Int        @id @default(autoincrement())
+  name       String
+  email      String
+  phone      String
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+
+  courses    Course[]
+}
+
+model Student {
+  id         Int          @id @default(autoincrement())
+  name       String
+  email      String
+  phone      String
+  is_deleted Boolean      @default(false)
+  created_at DateTime     @default(now())
+  updated_at DateTime     @updatedAt
+
+  enrollments Enrollment[]
+}
+
+model Course {
+  id            Int          @id @default(autoincrement())
+  name          String
+  description   String
+  instructor_id Int
+  schedule      DateTime
+  is_deleted    Boolean      @default(false)
+  created_at    DateTime     @default(now())
+  updated_at    DateTime     @updatedAt
+
+  instructor    Instructor   @relation(fields: [instructor_id], references: [id])
+  enrollments   Enrollment[]
+}
+
+model Enrollment {
+  id           Int        @id @default(autoincrement())
+  student_id   Int
+  course_id    Int
+  status       String
+  enrolled_at  DateTime   @default(now())
+  cancelled_at DateTime?
+
+  student      Student    @relation(fields: [student_id], references: [id])
+  course       Course     @relation(fields: [course_id], references: [id])
+}
